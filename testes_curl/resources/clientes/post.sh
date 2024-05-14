@@ -1,3 +1,4 @@
+#!/bin/sh
 curl -X POST \
   http://localhost:4567/clientes \
   -H 'Content-Type: application/json' \
