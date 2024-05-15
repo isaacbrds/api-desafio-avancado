@@ -62,3 +62,33 @@ get '/clientes/:id' do
     cliente_hash.to_json 
   end
 end
+
+put '/clientes/:id' do
+  content_type :json
+  id = params[:id].to_i
+  if id < 1
+    status 400
+    { erro: "O id é obrigatório" }.to_json
+  else
+    cliente = ClienteServico.new.buscar_por_id(id)
+    if cliente.nil?
+      status 400
+      { erro: "O cliente não foi encontrado" }.to_json
+    else
+      dados_cliente = JSON.parse(request.body.read)
+      
+      cliente.nome = dados_cliente['nome']
+      cliente.telefone = dados_cliente['telefone']
+      cliente.observacao = dados_cliente['observacao']
+
+      begin 
+        cliente_alterado = ClienteServico.new.salvar(cliente)
+        status 200
+        ObjParaJsonServico.transformar_para_obj(cliente_alterado)
+      rescue EntidadeValidacaoErro => e
+        status 400
+        { erro: e.message }.to_json
+      end
+    end
+  end
+end

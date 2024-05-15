@@ -4,6 +4,6 @@ class ObjParaJsonServico
   end
 
   def self.transformar_para_obj(obj)
-    obj.to_h.to_json
+    obj.to_hash.to_json
   end
 end
